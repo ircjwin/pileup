@@ -103,7 +103,7 @@ namespace Piles.Services
 
             foreach (RuminationDb ruminationDb in pileDb.Ruminations)
             {
-                Rumination rumination = new Rumination(ruminationDb.Origin, ruminationDb.CreatedOn, ruminationDb.Description);
+                Rumination rumination = new Rumination(ruminationDb.Origin, ruminationDb.CreatedOn, ruminationDb.Description, ruminationDb.IsSilenced);
                 ruminations.Add(rumination);
             }
 

@@ -19,13 +19,25 @@ namespace Piles.Models
             }
         }
 
+        private bool _isSilenced;
+        public bool IsSilenced
+        {
+            get { return _isSilenced; }
+            set
+            {
+                _isSilenced = value;
+                OnRuminationChanged();
+            }
+        }
+
         public event Action<Rumination> RuminationChanged;
 
-        public Rumination(int origin, DateTime createdOn, string description)
+        public Rumination(int origin, DateTime createdOn, string description, bool isSilenced)
         {
             Origin = origin;
             CreatedOn = createdOn;
             Description = description;
+            IsSilenced = isSilenced;
         }
 
         private void OnRuminationChanged()

@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:Piles.Views"
              xmlns:conv="clr-namespace:Piles.Converters"
              xmlns:attprop="clr-namespace:Piles.AttachedProperties"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d">
     <UserControl.Resources>
         <conv:BooleanToBrushConverter x:Key="BooleanToBrushConverter" />
@@ -151,7 +152,9 @@
                                                   Command="{Binding UpdateRuminationCommand}" />
                                 </StackPanel.InputBindings>
                                 <CheckBox IsChecked="{Binding IsChecked, UpdateSourceTrigger=PropertyChanged}"
-                                          Margin="0,0,5,0" />
+                                          Margin="0,0,5,0"
+                                          Command="{Binding UpdateRuminationIsCheckedCommand}"
+                                          CommandParameter="{Binding}" />
                                 <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
                                          Background="Transparent"
                                          IsReadOnly="{Binding IsNotEditing, UpdateSourceTrigger=PropertyChanged}"
@@ -159,7 +162,7 @@
                                          BorderBrush="{Binding IsNotEditing, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToBrushConverter}, FallbackValue=Transparent}"
                                          Focusable="{Binding IsEditing, UpdateSourceTrigger=PropertyChanged}"
                                          attprop:FocusExtension.IsFocused="{Binding IsEditing, UpdateSourceTrigger=PropertyChanged}"
-                                         TextDecorations="{Binding IsChecked, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToTextDecorationsConverter}, FallbackValue=null}">
+                                         TextDecorations="{Binding IsChecked, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToTextDecorationsConverter}, FallbackValue={x:Static sys:String.Empty}}">
                                     <TextBox.InputBindings>
                                         <KeyBinding Command="{Binding UpdateRuminationDescriptionCommand}"
                                                     CommandParameter="{Binding}"

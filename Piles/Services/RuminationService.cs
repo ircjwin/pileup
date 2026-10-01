@@ -98,7 +98,7 @@ namespace Piles.Services
 
         private Rumination ToDomain(RuminationDb ruminationDb)
         {
-            return new Rumination(ruminationDb.Origin, ruminationDb.CreatedOn, ruminationDb.Description);
+            return new Rumination(ruminationDb.Origin, ruminationDb.CreatedOn, ruminationDb.Description, ruminationDb.IsSilenced);
         }
 
         private RuminationDb ToDb(Rumination rumination, Pile pile)
@@ -108,6 +108,7 @@ namespace Piles.Services
                 Origin = rumination.Origin,
                 CreatedOn = rumination.CreatedOn,
                 Description = rumination.Description,
+                IsSilenced = rumination.IsSilenced,
 
                 PileOrigin = pile.Origin,
                 PileCreatedOn = pile.CreatedOn,
