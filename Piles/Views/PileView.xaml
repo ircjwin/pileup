@@ -9,6 +9,7 @@
              mc:Ignorable="d">
     <UserControl.Resources>
         <conv:BooleanToBrushConverter x:Key="BooleanToBrushConverter" />
+        <conv:BooleanToTextDecorationsConverter x:Key="BooleanToTextDecorationsConverter" />
         <Style TargetType="{x:Type ToggleButton}"
                x:Key="SwitchCheckBoxStyle">
             <Setter Property="Template">
@@ -157,7 +158,8 @@
                                          IsHitTestVisible="{Binding IsEditing, UpdateSourceTrigger=PropertyChanged}"
                                          BorderBrush="{Binding IsNotEditing, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToBrushConverter}, FallbackValue=Transparent}"
                                          Focusable="{Binding IsEditing, UpdateSourceTrigger=PropertyChanged}"
-                                         attprop:FocusExtension.IsFocused="{Binding IsEditing, UpdateSourceTrigger=PropertyChanged}">
+                                         attprop:FocusExtension.IsFocused="{Binding IsEditing, UpdateSourceTrigger=PropertyChanged}"
+                                         TextDecorations="{Binding IsChecked, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToTextDecorationsConverter}, FallbackValue=null}">
                                     <TextBox.InputBindings>
                                         <KeyBinding Command="{Binding UpdateRuminationDescriptionCommand}"
                                                     CommandParameter="{Binding}"
