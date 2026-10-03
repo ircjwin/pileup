@@ -85,6 +85,7 @@ namespace Piles.ViewModels
         public ICommand RemoveCheckedRuminationsCommand { get; }
         public ICommand CheckAllRuminationsCommand { get; }
         public ICommand UncheckAllRuminationsCommand { get; }
+        public ICommand ReorderRuminationCommand { get; }
         public ICommand UpdatePileCommand { get; }
         public ICommand UpdatePileTitleCommand { get; }
         public ICommand RummageCommand { get; }
@@ -102,6 +103,7 @@ namespace Piles.ViewModels
             AddRuminationCommand = new AddRuminationCommand(_pile, commandListener);
             RemoveCheckedRuminationsCommand = new RemoveCheckedRuminationsCommand(_pile, _ruminations, commandListener);
             UpdatePileTitleCommand = new UpdatePileTitleCommand(_pile, commandListener);
+            ReorderRuminationCommand = new ReorderRuminationCommand(pile, commandListener);
 
             CheckAllRuminationsCommand = new CheckAllRuminationsCommand(_ruminations);
             UncheckAllRuminationsCommand = new UncheckAllRuminationsCommand(_ruminations);

@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Piles.Views"
              xmlns:conv="clr-namespace:Piles.Converters"
-             xmlns:attprop="clr-namespace:Piles.AttachedProperties"
+             xmlns:attp="clr-namespace:Piles.AttachedProperties"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d">
     <UserControl.Resources>
@@ -96,13 +96,13 @@
                       Style="{StaticResource SwitchCheckBoxStyle}"
                       IsChecked="{Binding IsRummagePile, UpdateSourceTrigger=PropertyChanged}" />
         <ListView ItemsSource="{Binding Ruminations, UpdateSourceTrigger=PropertyChanged}"
-                  AllowDrop="true"
-                  attprop:ListViewDragDropBehavior.EnableDragDrop="True"
                   Grid.Row="1"
                   Grid.Column="0"
                   Grid.ColumnSpan="2">
             <ListView.Resources>
                 <Style TargetType="{x:Type ListViewItem}">
+                    <Setter Property="AllowDrop" Value="True" />
+                    <Setter Property="attp:ListViewItemDragDropBehavior.EnableDragDrop" Value="True" />
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="{x:Type ListViewItem}">
@@ -161,7 +161,7 @@
                                          IsHitTestVisible="{Binding IsEditing, UpdateSourceTrigger=PropertyChanged}"
                                          BorderBrush="{Binding IsNotEditing, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToBrushConverter}, FallbackValue=Transparent}"
                                          Focusable="{Binding IsEditing, UpdateSourceTrigger=PropertyChanged}"
-                                         attprop:FocusExtension.IsFocused="{Binding IsEditing, UpdateSourceTrigger=PropertyChanged}"
+                                         attp:FocusExtension.IsFocused="{Binding IsEditing, UpdateSourceTrigger=PropertyChanged}"
                                          TextDecorations="{Binding IsChecked, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToTextDecorationsConverter}, FallbackValue={x:Static sys:String.Empty}}">
                                     <TextBox.InputBindings>
                                         <KeyBinding Command="{Binding UpdateRuminationDescriptionCommand}"
