@@ -9,8 +9,9 @@ namespace Piles.Models
     {
         public int Origin { get; set; }
         public DateTime CreatedOn { get; set; }
+        public int SequenceNumber { get; set; }
         public string Title { get; set; }
-
+        
         public virtual ICollection<RuminationDb> Ruminations { get; } = new List<RuminationDb>();
     }
 }

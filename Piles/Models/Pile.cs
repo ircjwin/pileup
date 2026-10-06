@@ -22,19 +22,22 @@ namespace Piles.Models
 
         public IList<Rumination> Ruminations { get; set; }
 
+        public int Proximity { get; set; }
+
         public event Action<Pile> PileChanged;
 
-        public Pile(int origin, DateTime createdOn, string title, IList<Rumination> ruminations)
+        public Pile(int origin, DateTime createdOn, int proximity, string title, IList<Rumination> ruminations)
         {
             Origin = origin;
             CreatedOn = createdOn;
+            Proximity = proximity;
             Title = title;
             Ruminations = ruminations;
         }
 
         public void AddRumination(string description)
         {
-            Rumination rumination = new Rumination(Ruminations.Count, DateTime.Now, description, false);
+            Rumination rumination = new Rumination(Ruminations.Count, DateTime.Now, Ruminations.Count, description, false);
             Ruminations.Add(rumination);
             OnPileChanged();
         }
@@ -63,8 +66,20 @@ namespace Piles.Models
             OnPileChanged();
         }
 
+        private void UpdateRuminationLayers()
+        {
+            if (Ruminations == null) return;
+
+            foreach (Rumination rumination in Ruminations)
+            {
+                rumination.Layer = Ruminations.IndexOf(rumination);
+            }
+        }
+
         private void OnPileChanged()
         {
+            UpdateRuminationLayers();
+
             PileChanged?.Invoke(this);
         }
     }

@@ -17,7 +17,7 @@ namespace Piles.Models
         public void AddPile()
         {
             IList<Rumination> ruminations = new List<Rumination>();
-            Pile pile = new Pile(Piles.Count, DateTime.Now, "New Pile", ruminations);
+            Pile pile = new Pile(Piles.Count, DateTime.Now, Piles.Count, "New Pile", ruminations);
             Piles.Add(pile);
             OnPileupChanged();
         }
@@ -46,8 +46,20 @@ namespace Piles.Models
             OnPileupChanged();
         }
 
+        private void UpdatePileProximities()
+        {
+            if (Piles == null) return;
+
+            foreach (Pile pile in Piles)
+            {
+                pile.Proximity = Piles.IndexOf(pile);
+            }
+        }
+
         private void OnPileupChanged()
         {
+            UpdatePileProximities();
+
             PileupChanged?.Invoke(this);
         }
     }

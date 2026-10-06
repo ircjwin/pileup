@@ -1,4 +1,4 @@
-﻿using Piles.Commands;
+using Piles.Commands;
 using Piles.Models;
 using System;
 using System.Collections.Generic;

@@ -1,6 +1,7 @@
 ﻿using Piles.Models;
 using Piles.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Piles.Commands
@@ -9,19 +10,19 @@ namespace Piles.Commands
     {
         private readonly Pile _pile;
 
-        private OperationType _operationType = OperationType.Add;
+        private OperationType _operationType = OperationType.Modify;
         public override OperationType OperationType
         {
             get { return _operationType; }
         }
 
-        private Tuple<Rumination, Pile> _target;
-        public override Tuple<Rumination, Pile> Target
+        private ICollection<(Rumination, Pile)> _target;
+        public override ICollection<(Rumination, Pile)> Target
         {
             get { return _target; }
         }
 
-        private TargetType _targetType = TargetType.Rumination;
+        private TargetType _targetType = TargetType.RuminationCollection;
         public override TargetType TargetType
         {
             get { return _targetType; }
@@ -30,7 +31,7 @@ namespace Piles.Commands
         private int _oldIndex;
         private int _newIndex;
 
-        public ReorderRuminationCommand(Pile pile, Tuple<Rumination, Pile> ruminationPile, int oldIndex, int newIndex)
+        public ReorderRuminationCommand(Pile pile, ICollection<(Rumination, Pile)> ruminationPile, int oldIndex, int newIndex)
         {
             _pile = pile;
             _target = ruminationPile;
@@ -47,24 +48,36 @@ namespace Piles.Commands
 
         public override void Execute(object parameter)
         {
+            _target = new List<(Rumination, Pile)>();
             (_oldIndex, _newIndex) = parameter as Tuple<int, int>;
-            _target = new Tuple<Rumination, Pile>(_pile.Ruminations[_oldIndex], _pile);
+
+            Rumination reorderedRumination = _pile.Ruminations[_oldIndex];
+
             _pile.RemoveRuminationAt(_oldIndex);
-            _pile.InsertRumination(_newIndex, _target.Item1);
+            _pile.InsertRumination(_newIndex, reorderedRumination);
+
+            foreach (Rumination rumination in _pile.Ruminations)
+            {
+                _target.Add((rumination, _pile));
+            }
 
             OnExecuted();
         }
 
         public override void Redo()
         {
+            Rumination reorderedRumination = _pile.Ruminations[_oldIndex];
+
             _pile.RemoveRuminationAt(_oldIndex);
-            _pile.InsertRumination(_newIndex, _target.Item1);
+            _pile.InsertRumination(_newIndex, reorderedRumination);
         }
 
         public override void Undo()
         {
+            Rumination reorderedRumination = _pile.Ruminations[_newIndex];
+
             _pile.RemoveRuminationAt(_newIndex);
-            _pile.InsertRumination(_oldIndex, _target.Item1);
+            _pile.InsertRumination(_oldIndex, reorderedRumination);
         }
 
         public override ReorderRuminationCommand Clone()

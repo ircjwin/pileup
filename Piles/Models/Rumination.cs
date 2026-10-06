@@ -30,12 +30,15 @@ namespace Piles.Models
             }
         }
 
+        public int Layer { get; set; }
+
         public event Action<Rumination> RuminationChanged;
 
-        public Rumination(int origin, DateTime createdOn, string description, bool isSilenced)
+        public Rumination(int origin, DateTime createdOn, int layer, string description, bool isSilenced)
         {
             Origin = origin;
             CreatedOn = createdOn;
+            Layer = layer;
             Description = description;
             IsSilenced = isSilenced;
         }

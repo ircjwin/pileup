@@ -26,7 +26,8 @@ namespace Piles.Services
             using (PilesDbContext pilesDbContext = _pilesDbContextFactory.CreateDbContext())
             {
                 pileDbs = await pilesDbContext.Piles
-                    .Include(b => b.Ruminations)
+                    .OrderBy(p => p.SequenceNumber)
+                    .Include(p => p.Ruminations.OrderBy(r => r.SequenceNumber))
                     .AsNoTracking()
                     .ToListAsync();
             }
@@ -46,9 +47,9 @@ namespace Piles.Services
             using (PilesDbContext pilesDbContext = _pilesDbContextFactory.CreateDbContext())
             {
                 pileDb = await pilesDbContext.Piles
-                    .Include(b => b.Ruminations)
+                    .Include(p => p.Ruminations.OrderBy(r => r.SequenceNumber))
                     .AsNoTracking()
-                    .FirstOrDefaultAsync(b => b.Origin == origin && b.CreatedOn == createdOn);
+                    .FirstOrDefaultAsync(p => p.Origin == origin && p.CreatedOn == createdOn);
             }
 
             return ToDomain(pileDb);
@@ -103,11 +104,11 @@ namespace Piles.Services
 
             foreach (RuminationDb ruminationDb in pileDb.Ruminations)
             {
-                Rumination rumination = new Rumination(ruminationDb.Origin, ruminationDb.CreatedOn, ruminationDb.Description, ruminationDb.IsSilenced);
+                Rumination rumination = new Rumination(ruminationDb.Origin, ruminationDb.CreatedOn, ruminationDb.SequenceNumber, ruminationDb.Description, ruminationDb.IsSilenced);
                 ruminations.Add(rumination);
             }
 
-            return new Pile(pileDb.Origin, pileDb.CreatedOn, pileDb.Title, ruminations);
+            return new Pile(pileDb.Origin, pileDb.CreatedOn, pileDb.SequenceNumber, pileDb.Title, ruminations);
         }
 
         private PileDb ToDb(Pile pile)
@@ -116,6 +117,7 @@ namespace Piles.Services
             {
                 Origin = pile.Origin,
                 CreatedOn = pile.CreatedOn,
+                SequenceNumber = pile.Proximity,
                 Title = pile.Title,
             };
         }

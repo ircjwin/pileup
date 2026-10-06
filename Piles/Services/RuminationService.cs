@@ -26,9 +26,10 @@ namespace Piles.Services
             using (PilesDbContext pilesDbContext = _pilesDbContextFactory.CreateDbContext())
             {
                 ruminationDbs = await pilesDbContext.Ruminations
-                    .Where(c => c.PileOrigin == pileOrigin && c.PileCreatedOn == pileCreatedOn)
+                    .Where(r => r.PileOrigin == pileOrigin && r.PileCreatedOn == pileCreatedOn)
+                    .OrderBy(r => r.SequenceNumber)
                     .AsNoTracking()
-                .ToListAsync();
+                    .ToListAsync();
             }
 
             foreach (RuminationDb ruminationDb in ruminationDbs)
@@ -47,7 +48,7 @@ namespace Piles.Services
             {
                 ruminationDb = await pilesDbContext.Ruminations
                     .AsNoTracking()
-                    .FirstOrDefaultAsync(c => c.Origin == origin && c.CreatedOn == createdOn);
+                    .FirstOrDefaultAsync(r => r.Origin == origin && r.CreatedOn == createdOn);
             }
 
             return ToDomain(ruminationDb);
@@ -98,7 +99,7 @@ namespace Piles.Services
 
         private Rumination ToDomain(RuminationDb ruminationDb)
         {
-            return new Rumination(ruminationDb.Origin, ruminationDb.CreatedOn, ruminationDb.Description, ruminationDb.IsSilenced);
+            return new Rumination(ruminationDb.Origin, ruminationDb.CreatedOn, ruminationDb.SequenceNumber, ruminationDb.Description, ruminationDb.IsSilenced);
         }
 
         private RuminationDb ToDb(Rumination rumination, Pile pile)
@@ -107,6 +108,7 @@ namespace Piles.Services
             {
                 Origin = rumination.Origin,
                 CreatedOn = rumination.CreatedOn,
+                SequenceNumber = rumination.Layer,
                 Description = rumination.Description,
                 IsSilenced = rumination.IsSilenced,
 

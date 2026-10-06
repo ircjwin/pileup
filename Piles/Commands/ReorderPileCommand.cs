@@ -1,6 +1,8 @@
 ﻿using Piles.Models;
 using Piles.ViewModels;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Piles.Commands
@@ -9,19 +11,19 @@ namespace Piles.Commands
     {
         private readonly Pileup _pileup;
 
-        private OperationType _operationType = OperationType.Add;
+        private OperationType _operationType = OperationType.Modify;
         public override OperationType OperationType
         {
             get { return _operationType; }
         }
 
-        private Pile _target;
-        public override Pile Target
+        private ICollection<Pile> _target;
+        public override ICollection<Pile> Target
         {
             get { return _target; }
         }
 
-        private TargetType _targetType = TargetType.Pile;
+        private TargetType _targetType = TargetType.PileCollection;
         public override TargetType TargetType
         {
             get { return _targetType; }
@@ -30,10 +32,10 @@ namespace Piles.Commands
         private int _oldIndex;
         private int _newIndex;
 
-        public ReorderPileCommand(Pileup pileup, Pile pile, int oldIndex, int newIndex)
+        public ReorderPileCommand(Pileup pileup, ICollection<Pile> piles, int oldIndex, int newIndex)
         {
             _pileup = pileup;
-            _target = pile;
+            _target = piles;
             _oldIndex = oldIndex;
             _newIndex = newIndex;
         }
@@ -47,24 +49,31 @@ namespace Piles.Commands
 
         public override void Execute(object parameter)
         {
+            _target = _pileup.Piles;
             (_oldIndex, _newIndex) = parameter as Tuple<int, int>;
-            _target = _pileup.Piles[_oldIndex];
-            _pileup.RemovePileAt(_oldIndex);
-            _pileup.InsertPile(_newIndex, _target);
 
+            Pile reorderedPile = _pileup.Piles[_oldIndex];
+
+            _pileup.RemovePileAt(_oldIndex);
+            _pileup.InsertPile(_newIndex, reorderedPile);
+            
             OnExecuted();
         }
 
         public override void Redo()
         {
+            Pile reorderedPile = _pileup.Piles[_oldIndex];
+
             _pileup.RemovePileAt(_oldIndex);
-            _pileup.InsertPile(_newIndex, _target);
+            _pileup.InsertPile(_newIndex, reorderedPile);
         }
 
         public override void Undo()
         {
+            Pile reorderedPile = _pileup.Piles[_newIndex];
+
             _pileup.RemovePileAt(_newIndex);
-            _pileup.InsertPile(_oldIndex, _target);
+            _pileup.InsertPile(_oldIndex, reorderedPile);
         }
 
         public override ReorderPileCommand Clone()
