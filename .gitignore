@@ -3,8 +3,11 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
-# Design document
-design.txt
+# Design docs folder
+design/
+
+# Database
+*.db
 
 # User-specific files
 *.rsuser
