@@ -103,7 +103,7 @@ namespace Piles.ViewModels
             AddRuminationCommand = new AddRuminationCommand(_pile, commandListener);
             RemoveCheckedRuminationsCommand = new RemoveCheckedRuminationsCommand(_pile, _ruminations, commandListener);
             UpdatePileTitleCommand = new UpdatePileTitleCommand(_pile, commandListener);
-            ReorderRuminationCommand = new ReorderRuminationCommand(pile, commandListener);
+            ReorderRuminationCommand = new ReorderRuminationCommand(_pile, commandListener);
 
             CheckAllRuminationsCommand = new CheckAllRuminationsCommand(_ruminations);
             UncheckAllRuminationsCommand = new UncheckAllRuminationsCommand(_ruminations);

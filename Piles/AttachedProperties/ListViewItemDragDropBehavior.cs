@@ -1,7 +1,6 @@
 ﻿using Piles.ViewModels;
 using System;
 using System.Collections;
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -47,6 +46,9 @@ namespace Piles.AttachedProperties
             }
         }
 
+        private static ListViewItem _draggedItem;
+        private static Point _startPosition;
+
         private static void ListViewItem_PreviewMouseMove(object sender, MouseEventArgs e)
         {
             if (FindVisualParent<ListViewItem>(e.Source as DependencyObject) is not ListViewItem listViewItem)
@@ -56,7 +58,26 @@ namespace Piles.AttachedProperties
 
             if (Mouse.PrimaryDevice.LeftButton == MouseButtonState.Pressed)
             {
-                DragDrop.DoDragDrop(listViewItem, listViewItem, DragDropEffects.Move);
+                if (_draggedItem != null)
+                {
+                    Point currentPosition = e.GetPosition(null);
+                    Vector dragDistance = currentPosition - _startPosition;
+
+                    if (Math.Abs(dragDistance.X) >= SystemParameters.MinimumHorizontalDragDistance &&
+                        Math.Abs(dragDistance.Y) >= SystemParameters.MinimumVerticalDragDistance)
+                    {
+                        DragDrop.DoDragDrop(listViewItem, listViewItem, DragDropEffects.Move);
+                    }
+                }
+                else
+                {
+                    _draggedItem = listViewItem;
+                    _startPosition = e.GetPosition(null);
+                }
+            }
+            else
+            {
+                _draggedItem = null;
             }
         }
 
