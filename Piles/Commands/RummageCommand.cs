@@ -6,38 +6,40 @@ namespace Piles.Commands
 {
     public class RummageCommand : CommandBase
     {
-        private readonly PileViewModel _pileViewModel;
+        private readonly PileupViewModel _pileupViewModel;
 
-        public RummageCommand(PileViewModel pileViewModel)
+        public RummageCommand(PileupViewModel pileupViewModel)
         {
-            _pileViewModel = pileViewModel;
+            _pileupViewModel = pileupViewModel;
         }
 
         public override void Execute(object parameter)
         {
-            if (_pileViewModel.IsRummagePile)
-            {
-                IList<RuminationViewModel> rummage = new List<RuminationViewModel>();
+            IList<(RuminationViewModel, PileViewModel)> rummage = new List<(RuminationViewModel, PileViewModel)>();
 
-                foreach (RuminationViewModel ruminationViewModel in _pileViewModel.Ruminations)
+            foreach (PileViewModel pileViewModel in _pileupViewModel.Piles)
+            {
+                foreach (RuminationViewModel ruminationViewModel in pileViewModel.Ruminations)
                 {
                     if (ruminationViewModel.IsRummagePick)
                     {
                         ruminationViewModel.IsRummagePick = false;
                         continue;
                     }
+
                     if (ruminationViewModel.IsRummage)
                     {
-                        rummage.Add(ruminationViewModel);
+                        rummage.Add((ruminationViewModel, pileViewModel));
                     }
                 }
-
-                if (rummage.Count == 0) return;
-
-                Random random = new Random();
-                int rummageIndex = random.Next(rummage.Count);
-                rummage[rummageIndex].IsRummagePick = true;
             }
+
+            if (rummage.Count == 0) return;
+
+            Random random = new Random();
+            int rummageIndex = random.Next(rummage.Count);
+            rummage[rummageIndex].Item1.IsRummagePick = true;
+            _pileupViewModel.TopPile = rummage[rummageIndex].Item2;
         }
     }
 }

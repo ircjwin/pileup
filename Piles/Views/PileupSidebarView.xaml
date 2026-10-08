@@ -27,7 +27,7 @@
                 Margin="5,5,5,0">
             <Image Source="..\Images\RedoIcon.png" />
         </Button>
-        <Button Command="{Binding Path=CurrentPileViewModel.RummageCommand, UpdateSourceTrigger=PropertyChanged}"
+        <Button Command="{Binding Path=PileupViewModel.RummageCommand, UpdateSourceTrigger=PropertyChanged}"
                 Margin="5,5,5,0">
             <Image Source="..\Images\DiceIcon.png" />
         </Button>

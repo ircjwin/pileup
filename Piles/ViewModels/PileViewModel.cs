@@ -88,7 +88,6 @@ namespace Piles.ViewModels
         public ICommand ReorderRuminationCommand { get; }
         public ICommand UpdatePileCommand { get; }
         public ICommand UpdatePileTitleCommand { get; }
-        public ICommand RummageCommand { get; }
 
         private Func<Rumination, Pile, RuminationViewModel> _createRuminationViewModel;
 
@@ -109,7 +108,6 @@ namespace Piles.ViewModels
             CheckAllRuminationsCommand = new CheckAllRuminationsCommand(_ruminations);
             UncheckAllRuminationsCommand = new UncheckAllRuminationsCommand(_ruminations);
             UpdatePileCommand = new UpdatePileCommand(this);
-            RummageCommand = new RummageCommand(this);
 
             UpdateRuminations(_pile.Ruminations);
         }

@@ -31,6 +31,7 @@ namespace Piles.ViewModels
         public ICommand RemovePileCommand { get; private set; }
         public ICommand ReorderPileCommand { get; private set; }
         public ICommand SavePileupCommand { get; }
+        public ICommand RummageCommand { get; private set;  }
 
         private readonly IPileService _pileService;
 
@@ -66,6 +67,7 @@ namespace Piles.ViewModels
             AddPileCommand = new AddPileCommand(_pileup, commandListener);
             RemovePileCommand = new RemovePileCommand(_pileup, commandListener);
             ReorderPileCommand = new ReorderPileCommand(_pileup, commandListener);
+            RummageCommand = new RummageCommand(this);
 
             if (_pileup.Piles.Count == 0)
             {
