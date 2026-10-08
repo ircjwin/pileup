@@ -48,6 +48,9 @@ namespace Piles.AttachedProperties
             }
         }
 
+        private static TabItem _draggedItem;
+        private static Point _startPosition;
+
         private static void TabItem_PreviewMouseMove(object sender, MouseEventArgs e)
         {
             if (e.Source is not TabItem tabItem)
@@ -57,7 +60,26 @@ namespace Piles.AttachedProperties
 
             if (Mouse.PrimaryDevice.LeftButton == MouseButtonState.Pressed)
             {
-                DragDrop.DoDragDrop(tabItem, tabItem, DragDropEffects.Move);
+                if (_draggedItem != null)
+                {
+                    Point currentPosition = e.GetPosition(null);
+                    Vector dragDistance = currentPosition - _startPosition;
+
+                    if (Math.Abs(dragDistance.X) >= SystemParameters.MinimumHorizontalDragDistance ||
+                        Math.Abs(dragDistance.Y) >= SystemParameters.MinimumVerticalDragDistance)
+                    {
+                        DragDrop.DoDragDrop(tabItem, tabItem, DragDropEffects.Move);
+                    }
+                }
+                else
+                {
+                    _draggedItem = tabItem;
+                    _startPosition = e.GetPosition(null);
+                }
+            }
+            else
+            {
+                _draggedItem = null;
             }
         }
 

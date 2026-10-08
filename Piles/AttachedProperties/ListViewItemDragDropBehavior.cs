@@ -63,7 +63,7 @@ namespace Piles.AttachedProperties
                     Point currentPosition = e.GetPosition(null);
                     Vector dragDistance = currentPosition - _startPosition;
 
-                    if (Math.Abs(dragDistance.X) >= SystemParameters.MinimumHorizontalDragDistance &&
+                    if (Math.Abs(dragDistance.X) >= SystemParameters.MinimumHorizontalDragDistance ||
                         Math.Abs(dragDistance.Y) >= SystemParameters.MinimumVerticalDragDistance)
                     {
                         DragDrop.DoDragDrop(listViewItem, listViewItem, DragDropEffects.Move);
