@@ -115,16 +115,6 @@
                                     <MultiDataTrigger>
                                         <MultiDataTrigger.Conditions>
                                             <Condition Binding="{Binding IsRummage, UpdateSourceTrigger=PropertyChanged}"
-                                                       Value="False" />
-                                            <Condition Binding="{Binding RelativeSource={RelativeSource AncestorType=ListView}, UpdateSourceTrigger=PropertyChanged, Path=DataContext.IsRummagePile}"
-                                                       Value="True" />
-                                        </MultiDataTrigger.Conditions>
-                                        <Setter Property="Visibility"
-                                                Value="Collapsed" />
-                                    </MultiDataTrigger>
-                                    <MultiDataTrigger>
-                                        <MultiDataTrigger.Conditions>
-                                            <Condition Binding="{Binding IsRummage, UpdateSourceTrigger=PropertyChanged}"
                                                        Value="True" />
                                             <Condition Binding="{Binding IsRummagePick, UpdateSourceTrigger=PropertyChanged}"
                                                        Value="True" />
@@ -143,40 +133,54 @@
             </ListView.Resources>
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <Expander>
-                        <Expander.Header>
-                            <StackPanel Orientation="Horizontal"
-                                        Background="Transparent">
-                                <StackPanel.InputBindings>
-                                    <MouseBinding Gesture="LeftDoubleClick"
-                                                  Command="{Binding UpdateRuminationCommand}" />
-                                </StackPanel.InputBindings>
-                                <CheckBox IsChecked="{Binding IsChecked, UpdateSourceTrigger=PropertyChanged}"
-                                          Margin="0,0,5,0"
-                                          Command="{Binding UpdateRuminationIsCheckedCommand}"
-                                          CommandParameter="{Binding}" />
-                                <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
-                                         Background="Transparent"
-                                         IsReadOnly="{Binding IsNotEditing, UpdateSourceTrigger=PropertyChanged}"
-                                         IsHitTestVisible="{Binding IsEditing, UpdateSourceTrigger=PropertyChanged}"
-                                         BorderBrush="{Binding IsNotEditing, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToBrushConverter}, FallbackValue=Transparent}"
-                                         Focusable="{Binding IsEditing, UpdateSourceTrigger=PropertyChanged}"
-                                         attp:FocusExtension.IsFocused="{Binding IsEditing, UpdateSourceTrigger=PropertyChanged}"
-                                         TextDecorations="{Binding IsChecked, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToTextDecorationsConverter}, FallbackValue={x:Static sys:String.Empty}}">
-                                    <TextBox.InputBindings>
-                                        <KeyBinding Command="{Binding UpdateRuminationDescriptionCommand}"
-                                                    CommandParameter="{Binding}"
-                                                    Key="Return" />
-                                    </TextBox.InputBindings>
-                                </TextBox>
-                            </StackPanel>
-                        </Expander.Header>
-                        <StackPanel Orientation="Horizontal">
-                            <CheckBox IsChecked="{Binding IsRummage, UpdateSourceTrigger=PropertyChanged}"
-                                      Margin="24,0,5,0" />
-                            <TextBlock Text="Rummage" />
-                        </StackPanel>
-                    </Expander>
+                    <StackPanel Orientation="Horizontal"
+                                Background="Transparent">
+                        <StackPanel.InputBindings>
+                            <MouseBinding Gesture="LeftDoubleClick"
+                                          Command="{Binding UpdateRuminationCommand}" />
+                        </StackPanel.InputBindings>
+                        <CheckBox Margin="0,0,5,0">
+                            <CheckBox.Resources>
+                                <Style TargetType="{x:Type CheckBox}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=ListView}, UpdateSourceTrigger=PropertyChanged, Path=DataContext.IsRummagePile}"
+                                                     Value="False">
+                                            <Setter Property="IsChecked" Value="{Binding IsChecked, UpdateSourceTrigger=PropertyChanged}" />
+                                            <Setter Property="Command" Value="{Binding UpdateRuminationIsCheckedCommand}" />
+                                            <Setter Property="CommandParameter" Value="{Binding}" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=ListView}, UpdateSourceTrigger=PropertyChanged, Path=DataContext.IsRummagePile}"
+                                                     Value="True">
+                                            <Setter Property="IsChecked" Value="{Binding IsRummage, UpdateSourceTrigger=PropertyChanged}" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </CheckBox.Resources>
+                        </CheckBox>
+                        <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
+                                  Background="Transparent"
+                                  IsReadOnly="{Binding IsNotEditing, UpdateSourceTrigger=PropertyChanged}"
+                                  IsHitTestVisible="{Binding IsEditing, UpdateSourceTrigger=PropertyChanged}"
+                                  BorderBrush="{Binding IsNotEditing, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToBrushConverter}, FallbackValue=Transparent}"
+                                  Focusable="{Binding IsEditing, UpdateSourceTrigger=PropertyChanged}"
+                                  attp:FocusExtension.IsFocused="{Binding IsEditing, UpdateSourceTrigger=PropertyChanged}">
+                            <TextBox.Resources>
+                                <Style TargetType="{x:Type TextBox}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=ListView}, UpdateSourceTrigger=PropertyChanged, Path=DataContext.IsRummagePile}"
+                                                     Value="False">
+                                            <Setter Property="TextDecorations" Value="{Binding IsChecked, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToTextDecorationsConverter}, FallbackValue={x:Static sys:String.Empty}}" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBox.Resources>
+                            <TextBox.InputBindings>
+                                <KeyBinding Command="{Binding UpdateRuminationDescriptionCommand}"
+                                            CommandParameter="{Binding}"
+                                            Key="Return" />
+                            </TextBox.InputBindings>
+                        </TextBox>
+                    </StackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>

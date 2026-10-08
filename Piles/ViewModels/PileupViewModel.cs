@@ -79,15 +79,11 @@ namespace Piles.ViewModels
         public void UpdatePiles(IEnumerable<Pile> piles)
         {
             _piles.Clear();
-            int tabControlIndex = 0;
 
             foreach (Pile pile in piles)
             {
                 PileViewModel pileViewModel = _createPileViewModel(pile);
-                pileViewModel.TabControlIndex = tabControlIndex;
                 _piles.Add(pileViewModel);
-
-                tabControlIndex++;
             }
 
             TopPile = _piles.FirstOrDefault();

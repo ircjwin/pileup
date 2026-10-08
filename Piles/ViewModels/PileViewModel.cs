@@ -96,9 +96,10 @@ namespace Piles.ViewModels
         {
             _pile = pile;
             _title = pile.Title;
-            _pile.PileChanged += OnPileChanged;
+            _tabControlIndex = pile.Proximity;
             _ruminations = new ObservableCollection<RuminationViewModel>();
             _createRuminationViewModel = createRuminationViewModel;
+            _pile.PileChanged += OnPileChanged;
 
             AddRuminationCommand = new AddRuminationCommand(_pile, commandListener);
             RemoveCheckedRuminationsCommand = new RemoveCheckedRuminationsCommand(_pile, _ruminations, commandListener);
@@ -127,6 +128,8 @@ namespace Piles.ViewModels
         private void OnPileChanged(Pile pile)
         {
             Title = pile.Title;
+            TabControlIndex = pile.Proximity;
+
             UpdateRuminations(pile.Ruminations);
         }
     }

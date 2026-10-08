@@ -89,16 +89,6 @@ namespace Piles.ViewModels
             UpdateRuminationIsCheckedCommand = new UpdateRuminationIsCheckedCommand(_rumination, pile, commandListener);
         }
 
-        public void CheckRumination()
-        {
-            IsChecked = true;
-        }
-
-        public void UncheckRumination()
-        {
-            IsChecked = false;
-        }
-
         private void OnRuminationChanged(Rumination rumination)
         {
             Description = rumination.Description;
