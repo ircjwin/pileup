@@ -38,8 +38,8 @@ namespace Piles.Commands
 
             Random random = new Random();
             int rummageIndex = random.Next(rummage.Count);
-            rummage[rummageIndex].Item1.IsRummagePick = true;
             _pileupViewModel.TopPile = rummage[rummageIndex].Item2;
+            rummage[rummageIndex].Item1.IsRummagePick = true;
         }
     }
 }

@@ -98,7 +98,8 @@
         <ListView ItemsSource="{Binding Ruminations, UpdateSourceTrigger=PropertyChanged}"
                   Grid.Row="1"
                   Grid.Column="0"
-                  Grid.ColumnSpan="2">
+                  Grid.ColumnSpan="2"
+                  attp:ListViewRummagePickBehavior.RummagePick="{Binding FocusedRumination, UpdateSourceTrigger=PropertyChanged}">
             <ListView.Resources>
                 <Style TargetType="{x:Type ListViewItem}">
                     <Setter Property="AllowDrop" Value="True" />

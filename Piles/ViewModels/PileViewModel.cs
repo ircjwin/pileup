@@ -3,6 +3,7 @@ using Piles.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Windows.Input;
 
 namespace Piles.ViewModels
@@ -81,6 +82,17 @@ namespace Piles.ViewModels
             }
         }
 
+        private int _focusedRumination;
+        public int FocusedRumination
+        {
+            get { return _focusedRumination; }
+            set
+            {
+                _focusedRumination = value;
+                OnPropertyChanged();
+            }
+        }
+
         public ICommand AddRuminationCommand { get; }
         public ICommand RemoveCheckedRuminationsCommand { get; }
         public ICommand CheckAllRuminationsCommand { get; }
@@ -119,6 +131,7 @@ namespace Piles.ViewModels
             foreach (Rumination rumination in ruminations)
             {
                 RuminationViewModel ruminationViewModel = _createRuminationViewModel(rumination, _pile);
+                ruminationViewModel.PropertyChanged += OnRuminationViewModelPropertyChanged;
                 _ruminations.Add(ruminationViewModel);
             }
         }
@@ -129,6 +142,19 @@ namespace Piles.ViewModels
             TabControlIndex = pile.Proximity;
 
             UpdateRuminations(pile.Ruminations);
+        }
+
+        private void OnRuminationViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(RuminationViewModel.IsRummagePick))
+            {
+                RuminationViewModel ruminationViewModel = sender as RuminationViewModel;
+
+                if (ruminationViewModel.IsRummagePick)
+                {
+                    FocusedRumination = _ruminations.IndexOf(ruminationViewModel);
+                }
+            }
         }
     }
 }
