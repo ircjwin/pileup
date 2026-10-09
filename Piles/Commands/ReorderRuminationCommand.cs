@@ -17,7 +17,7 @@ namespace Piles.Commands
         }
 
         private ICollection<(Rumination, Pile)> _target;
-        public override ICollection<(Rumination, Pile)> Target
+        public override object Target
         {
             get { return _target; }
         }
