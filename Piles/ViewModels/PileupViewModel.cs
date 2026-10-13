@@ -4,8 +4,10 @@ using Piles.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Windows.Input;
+using System.Xml.Serialization;
 
 namespace Piles.ViewModels
 {
@@ -41,7 +43,7 @@ namespace Piles.ViewModels
         {
             _piles = new ObservableCollection<PileViewModel>();
 
-            SavePileupCommand = new SavePileupCommand(commandListener);
+            SavePileupCommand = new SavePileupCommand(commandListener, this);
             _createPileViewModel = createPileViewModel;
             _pileService = pileService;
         }
@@ -55,6 +57,13 @@ namespace Piles.ViewModels
             PileupViewModel pileupViewModel = new PileupViewModel(createPileViewModel, pileService, commandListener);
             pileupViewModel.Load(commandListener);
             return pileupViewModel;
+        }
+
+        public void Save()
+        {
+            XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<PileViewModel>));
+            StreamWriter streamWriter = new StreamWriter("Piles.xml");
+            xmlSerializer.Serialize(streamWriter, _piles.ToList());
         }
 
         public async void Load(ICommandListener commandListener)
@@ -75,16 +84,34 @@ namespace Piles.ViewModels
                 _pileup.Piles.FirstOrDefault().Title = "General";
             }
 
-            UpdatePiles(_pileup.Piles);
+            IList<PileViewModel> pileViewModels = null;
+
+            if (File.Exists("Piles.xml"))
+            {
+                XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<PileViewModel>));
+                using FileStream fileStream = new FileStream("Piles.xml", FileMode.Open);
+                pileViewModels = xmlSerializer.Deserialize(fileStream) as List<PileViewModel>;
+            }
+
+            UpdatePiles(_pileup.Piles, pileViewModels);
         }
 
-        public void UpdatePiles(IEnumerable<Pile> piles)
+        public void UpdatePiles(IEnumerable<Pile> piles, IList<PileViewModel> pileViewModels = null)
         {
             _piles.Clear();
+
+            int idx = 0;
 
             foreach (Pile pile in piles)
             {
                 PileViewModel pileViewModel = _createPileViewModel(pile);
+
+                if (pileViewModels != null)
+                {
+                    pileViewModel.IsRummagePile = pileViewModels[idx].IsRummagePile;
+                    idx++;
+                }
+
                 _piles.Add(pileViewModel);
             }
 

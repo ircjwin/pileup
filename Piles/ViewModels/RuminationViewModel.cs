@@ -1,6 +1,7 @@
 ﻿using Piles.Commands;
 using Piles.Models;
 using System.Windows.Input;
+using System.Xml.Serialization;
 
 namespace Piles.ViewModels
 {
@@ -9,6 +10,8 @@ namespace Piles.ViewModels
         private readonly Rumination _rumination;
 
         private string _description;
+
+        [XmlIgnore]
         public string Description
         {
             get { return _description; }
@@ -20,6 +23,8 @@ namespace Piles.ViewModels
         }
 
         private bool _isEditing;
+
+        [XmlIgnore]
         public bool IsEditing
         {
             get { return _isEditing; }
@@ -32,12 +37,15 @@ namespace Piles.ViewModels
             }
         }
 
+        [XmlIgnore]
         public bool IsNotEditing
         {
             get { return !_isEditing; }
         }
 
         private bool _isChecked;
+
+        [XmlIgnore]
         public bool IsChecked
         {
             get
@@ -63,6 +71,8 @@ namespace Piles.ViewModels
         }
 
         private bool _isRummagePick;
+
+        [XmlIgnore]
         public bool IsRummagePick
         {
             get { return _isRummagePick; }
@@ -76,6 +86,8 @@ namespace Piles.ViewModels
         public ICommand UpdateRuminationCommand { get; }
         public ICommand UpdateRuminationDescriptionCommand { get; }
         public ICommand UpdateRuminationIsCheckedCommand { get; }
+
+        private RuminationViewModel() { }
 
         public RuminationViewModel(Rumination rumination, Pile pile, ICommandListener commandListener)
         {

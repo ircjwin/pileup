@@ -13,6 +13,11 @@ namespace Piles.Commands
 
         public abstract TargetType TargetType { get; }
 
+        public virtual bool CanSave(object parameter)
+        {
+            return true;
+        }
+
         public abstract void Redo();
 
         public abstract void Undo();

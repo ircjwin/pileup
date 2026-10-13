@@ -5,12 +5,15 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Input;
+using System.Xml.Serialization;
 
 namespace Piles.ViewModels
 {
     public class PileViewModel : ViewModelBase
     {
         private bool _isEditing = false;
+
+        [XmlIgnore]
         public bool IsEditing
         {
             get { return _isEditing; }
@@ -23,6 +26,7 @@ namespace Piles.ViewModels
             }
         }
 
+        [XmlIgnore]
         public bool IsNotEditing
         {
             get { return !_isEditing; }
@@ -31,6 +35,8 @@ namespace Piles.ViewModels
         private readonly Pile _pile;
 
         private string _title;
+
+        [XmlIgnore]
         public string Title
         {
             get { return _title; }
@@ -45,6 +51,8 @@ namespace Piles.ViewModels
         public IEnumerable<RuminationViewModel> Ruminations => _ruminations;
 
         private string _newRuminationDescription;
+
+        [XmlIgnore]
         public string NewRuminationDescription
         {
             get
@@ -59,6 +67,8 @@ namespace Piles.ViewModels
         }
 
         private int _tabControlIndex;
+
+        [XmlIgnore]
         public int TabControlIndex
         {
             get
@@ -83,6 +93,8 @@ namespace Piles.ViewModels
         }
 
         private int _focusedRumination;
+
+        [XmlIgnore]
         public int FocusedRumination
         {
             get { return _focusedRumination; }
@@ -102,6 +114,8 @@ namespace Piles.ViewModels
         public ICommand UpdatePileTitleCommand { get; }
 
         private Func<Rumination, Pile, RuminationViewModel> _createRuminationViewModel;
+
+        private PileViewModel() { }
 
         public PileViewModel(Pile pile, Func<Rumination, Pile, RuminationViewModel> createRuminationViewModel, ICommandListener commandListener)
         {

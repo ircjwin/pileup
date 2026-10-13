@@ -51,6 +51,8 @@ namespace Piles.ViewModels
 
             foreach (IUndoableCommand undoableCommand in _undoStack.Reverse())
             {
+                if (undoableCommand.CanSave(null) is false) continue;
+
                 if (undoableCommand.TargetType == TargetType.Pile)
                 {
                     unsavedPiles.Add((undoableCommand.OperationType, (Pile)undoableCommand.Target));
