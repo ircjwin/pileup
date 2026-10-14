@@ -119,8 +119,6 @@
                                                        Value="True" />
                                             <Condition Binding="{Binding IsRummagePick, UpdateSourceTrigger=PropertyChanged}"
                                                        Value="True" />
-                                            <Condition Binding="{Binding RelativeSource={RelativeSource AncestorType=ListView}, UpdateSourceTrigger=PropertyChanged, Path=DataContext.IsRummagePile}"
-                                                       Value="True" />
                                         </MultiDataTrigger.Conditions>
                                         <Setter TargetName="ListViewItemBorder"
                                                 Property="Background"
