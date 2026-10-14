@@ -12,7 +12,7 @@ namespace Piles.Commands
             get { return _operationType; }
         }
 
-        private Tuple<Rumination, Pile> _target;
+        private RuminationViewModel _target;
         public override object Target
         {
             get { return _target; }
@@ -27,39 +27,41 @@ namespace Piles.Commands
         private bool _oldIsChecked;
         private bool _newIsChecked;
 
-        public UpdateRuminationIsCheckedCommand(Rumination rumination, Pile pile, ICommandListener commandListener)
+        public override bool CanSave(object parameter)
         {
-            _target = Tuple.Create(rumination, pile);
+            return false;
+        }
+
+        public UpdateRuminationIsCheckedCommand(RuminationViewModel ruminationViewModel, ICommandListener commandListener)
+        {
+            _target = ruminationViewModel;
 
             commandListener.Listen(this);
         }
 
-        public UpdateRuminationIsCheckedCommand(Tuple<Rumination, Pile> ruminationPile, bool oldIsChecked, bool newIsChecked)
+        public UpdateRuminationIsCheckedCommand(RuminationViewModel ruminationViewModel, bool oldIsChecked, bool newIsChecked)
         {
-            _target = ruminationPile;
+            _target = ruminationViewModel;
             _oldIsChecked = oldIsChecked;
             _newIsChecked = newIsChecked;
         }
 
         public override void Execute(object parameter)
         {
-            RuminationViewModel ruminationViewModel = parameter as RuminationViewModel;
-
-            _oldIsChecked = _target.Item1.IsSilenced;
-            _newIsChecked = ruminationViewModel.IsChecked;
-            _target.Item1.IsSilenced = _newIsChecked;
+            _oldIsChecked = !_target.IsChecked;
+            _newIsChecked = _target.IsChecked;
 
             OnExecuted();
         }
 
         public override void Redo()
         {
-            _target.Item1.IsSilenced = _newIsChecked;
+            _target.IsChecked = _newIsChecked;
         }
 
         public override void Undo()
         {
-            _target.Item1.IsSilenced = _oldIsChecked;
+            _target.IsChecked = _oldIsChecked;
         }
 
         public override UpdateRuminationIsCheckedCommand Clone()

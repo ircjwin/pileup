@@ -131,8 +131,8 @@ namespace Piles.ViewModels
             RemoveCheckedRuminationsCommand = new RemoveCheckedRuminationsCommand(_pile, _ruminations, commandListener);
             UpdatePileTitleCommand = new UpdatePileTitleCommand(_pile, commandListener);
             ReorderRuminationCommand = new ReorderRuminationCommand(_pile, commandListener);
-            CheckAllRuminationsCommand = new CheckAllRuminationsCommand(_pile, commandListener);
-            UncheckAllRuminationsCommand = new UncheckAllRuminationsCommand(_pile, commandListener);
+            CheckAllRuminationsCommand = new CheckAllRuminationsCommand(this, commandListener);
+            UncheckAllRuminationsCommand = new UncheckAllRuminationsCommand(this, commandListener);
             UpdatePileCommand = new UpdatePileCommand(this);
 
             UpdateRuminations(_pile.Ruminations);
@@ -157,6 +157,7 @@ namespace Piles.ViewModels
             foreach (RuminationViewModel ruminationViewModel in _ruminations)
             {
                 ruminationViewModel.IsRummage = ruminationViewModels[i].IsRummage;
+                ruminationViewModel.IsChecked = ruminationViewModels[i].IsChecked;
                 i++;
             }
         }

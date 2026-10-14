@@ -44,8 +44,6 @@ namespace Piles.ViewModels
         }
 
         private bool _isChecked;
-
-        [XmlIgnore]
         public bool IsChecked
         {
             get
@@ -93,18 +91,16 @@ namespace Piles.ViewModels
         {
             _rumination = rumination;
             _description = rumination.Description;
-            _isChecked = rumination.IsSilenced;
             _rumination.RuminationChanged += OnRuminationChanged;
 
             UpdateRuminationCommand = new UpdateRuminationCommand(this);
             UpdateRuminationDescriptionCommand = new UpdateRuminationDescriptionCommand(_rumination, pile, commandListener);
-            UpdateRuminationIsCheckedCommand = new UpdateRuminationIsCheckedCommand(_rumination, pile, commandListener);
+            UpdateRuminationIsCheckedCommand = new UpdateRuminationIsCheckedCommand(this, commandListener);
         }
 
         private void OnRuminationChanged(Rumination rumination)
         {
             Description = rumination.Description;
-            IsChecked = rumination.IsSilenced;
         }
     }
 }

@@ -37,7 +37,7 @@ namespace Piles.Models
 
         public void AddRumination(string description)
         {
-            Rumination rumination = new Rumination(Ruminations.Count, DateTime.Now, Ruminations.Count, description, false);
+            Rumination rumination = new Rumination(Ruminations.Count, DateTime.Now, Ruminations.Count, description);
             Ruminations.Add(rumination);
             OnPileChanged();
         }

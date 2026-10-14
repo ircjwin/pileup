@@ -47,9 +47,6 @@ namespace Piles.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("IsSilenced")
-                        .HasColumnType("INTEGER");
-
                     b.Property<DateTime>("PileCreatedOn")
                         .HasColumnType("TEXT");
 

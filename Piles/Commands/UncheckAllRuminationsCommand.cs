@@ -7,7 +7,7 @@ namespace Piles.Commands
 {
     public class UncheckAllRuminationsCommand : UndoableCommandBase
     {
-        private readonly Pile _pile;
+        private readonly PileViewModel _pileViewModel;
 
         private OperationType _operationType = OperationType.Modify;
         public override OperationType OperationType
@@ -15,7 +15,7 @@ namespace Piles.Commands
             get { return _operationType; }
         }
 
-        private ICollection<(Rumination, Pile)> _target;
+        private ICollection<RuminationViewModel> _target;
         public override object Target
         {
             get { return _target; }
@@ -27,28 +27,33 @@ namespace Piles.Commands
             get { return _targetType; }
         }
 
-        public UncheckAllRuminationsCommand(ICollection<(Rumination, Pile)> target)
+        public override bool CanSave(object parameter)
+        {
+            return false;
+        }
+
+        public UncheckAllRuminationsCommand(ICollection<RuminationViewModel> target)
         {
             _target = target;
         }
 
-        public UncheckAllRuminationsCommand(Pile pile, ICommandListener commandListener)
+        public UncheckAllRuminationsCommand(PileViewModel pileViewModel, ICommandListener commandListener)
         {
-            _pile = pile;
+            _pileViewModel = pileViewModel;
 
             commandListener.Listen(this);
         }
 
         public override void Execute(object parameter)
         {
-            _target = new List<(Rumination, Pile)>();
+            _target = new List<RuminationViewModel>();
 
-            foreach (Rumination rumination in _pile.Ruminations)
+            foreach (RuminationViewModel ruminationViewModel in _pileViewModel.Ruminations)
             {
-                if (rumination.IsSilenced)
+                if (ruminationViewModel.IsChecked)
                 {
-                    rumination.IsSilenced = false;
-                    _target.Add((rumination, _pile));
+                    ruminationViewModel.IsChecked = false;
+                    _target.Add(ruminationViewModel);
                 }
             }
 
@@ -57,17 +62,17 @@ namespace Piles.Commands
 
         public override void Redo()
         {
-            foreach ((Rumination, Pile) ruminationPile in _target)
+            foreach (RuminationViewModel ruminationViewModel in _target)
             {
-                ruminationPile.Item1.IsSilenced = false;
+                ruminationViewModel.IsChecked = false;
             }
         }
 
         public override void Undo()
         {
-            foreach ((Rumination, Pile) ruminationPile in _target)
+            foreach (RuminationViewModel ruminationViewModel in _target)
             {
-                ruminationPile.Item1.IsSilenced = true;
+                ruminationViewModel.IsChecked = true;
             }
         }
 

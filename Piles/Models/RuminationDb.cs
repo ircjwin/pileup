@@ -10,7 +10,6 @@ namespace Piles.Models
         public DateTime CreatedOn { get; set; }
         public int SequenceNumber { get; set; }
         public string Description { get; set; }
-        public bool IsSilenced { get; set; }
         
         public int PileOrigin { get; set; }
         public DateTime PileCreatedOn { get; set; }
