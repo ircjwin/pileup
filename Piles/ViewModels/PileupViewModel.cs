@@ -11,6 +11,21 @@ using System.Xml.Serialization;
 
 namespace Piles.ViewModels
 {
+    public class PileData
+    {
+        public PileViewModel PileViewModel { get; set; }
+
+        public List<RuminationViewModel> RuminationViewModels { get; set; }
+
+        public PileData() { }
+
+        public PileData(PileViewModel pileViewModel, List<RuminationViewModel> ruminationViewModels)
+        {
+            PileViewModel = pileViewModel;
+            RuminationViewModels = ruminationViewModels;
+        }
+    }
+
     public class PileupViewModel : ViewModelBase
     {
         private Pileup _pileup;
@@ -61,9 +76,17 @@ namespace Piles.ViewModels
 
         public void Save()
         {
-            XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<PileViewModel>));
-            StreamWriter streamWriter = new StreamWriter("Piles.xml");
-            xmlSerializer.Serialize(streamWriter, _piles.ToList());
+            List<PileData> pileData = new List<PileData>();
+
+            foreach (PileViewModel pileViewModel in Piles)
+            {
+                PileData pile = new PileData(pileViewModel, pileViewModel.Ruminations.ToList());
+                pileData.Add(pile);
+            }
+
+            XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<PileData>));
+            StreamWriter streamWriter = new StreamWriter("PileData.xml");
+            xmlSerializer.Serialize(streamWriter, pileData);
         }
 
         public async void Load(ICommandListener commandListener)
@@ -84,32 +107,33 @@ namespace Piles.ViewModels
                 _pileup.Piles.FirstOrDefault().Title = "General";
             }
 
-            IList<PileViewModel> pileViewModels = null;
+            List<PileData> pileData = null;
 
-            if (File.Exists("Piles.xml"))
+            if (File.Exists("PileData.xml"))
             {
-                XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<PileViewModel>));
-                using FileStream fileStream = new FileStream("Piles.xml", FileMode.Open);
-                pileViewModels = xmlSerializer.Deserialize(fileStream) as List<PileViewModel>;
+                XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<PileData>));
+                using FileStream fileStream = new FileStream("PileData.xml", FileMode.Open);
+                pileData = xmlSerializer.Deserialize(fileStream) as List<PileData>;
             }
 
-            UpdatePiles(_pileup.Piles, pileViewModels);
+            UpdatePiles(_pileup.Piles, pileData);
         }
 
-        public void UpdatePiles(IEnumerable<Pile> piles, IList<PileViewModel> pileViewModels = null)
+        public void UpdatePiles(IEnumerable<Pile> piles, List<PileData> pileData = null)
         {
             _piles.Clear();
 
-            int idx = 0;
+            int i = 0;
 
             foreach (Pile pile in piles)
             {
                 PileViewModel pileViewModel = _createPileViewModel(pile);
 
-                if (pileViewModels != null)
+                if (pileData != null)
                 {
-                    pileViewModel.IsRummagePile = pileViewModels[idx].IsRummagePile;
-                    idx++;
+                    pileViewModel.IsRummagePile = pileData[i].PileViewModel.IsRummagePile;
+                    pileViewModel.UpdateRuminations(pileData[i].RuminationViewModels);
+                    i++;
                 }
 
                 _piles.Add(pileViewModel);

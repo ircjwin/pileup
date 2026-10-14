@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows.Input;
 using System.Xml.Serialization;
 
@@ -146,6 +147,17 @@ namespace Piles.ViewModels
                 RuminationViewModel ruminationViewModel = _createRuminationViewModel(rumination, _pile);
                 ruminationViewModel.PropertyChanged += OnRuminationViewModelPropertyChanged;
                 _ruminations.Add(ruminationViewModel);
+            }
+        }
+
+        public void UpdateRuminations(IList<RuminationViewModel> ruminationViewModels)
+        {
+            int i = 0;
+            
+            foreach (RuminationViewModel ruminationViewModel in _ruminations)
+            {
+                ruminationViewModel.IsRummage = ruminationViewModels[i].IsRummage;
+                i++;
             }
         }
 
